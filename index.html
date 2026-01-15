@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADMELONAM</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#a855ff">
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+  .then(() => console.log('Service Worker зарегистрирован'))
+  .catch(err => console.log('Ошибка Service Worker:', err));
+}
+</script>
+
+<style>
+:root{--neon:#a855ff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#05000a;color:white;overflow-x:hidden}
+.bg{position:fixed;inset:0;z-index:-2}
+.star{position:absolute;width:3px;height:3px;background:var(--neon);opacity:.6;animation:float 25s linear infinite}
+@keyframes float{from{transform:translateY(110vh)}to{transform:translateY(-10vh)}}
+.overlay{position:fixed;inset:0;background:radial-gradient(circle at top,#2b0050,transparent 60%);z-index:-1}
+.container{min-height:100vh;padding:60px 20px 120px;display:flex;flex-direction:column;align-items:center;text-align:center}
+h1{font-size:3rem;letter-spacing:4px;text-shadow:0 0 30px var(--neon)}
+.subtitle{opacity:.8;margin-bottom:40px}
+.links{width:100%;max-width:360px;display:flex;flex-direction:column;gap:18px}
+.btn{border:2px solid var(--neon);border-radius:50px;padding:16px;color:white;display:flex;justify-content:center;align-items:center;gap:12px;box-shadow:0 0 15px var(--neon);transition:.3s;cursor:pointer}
+.btn:hover{background:var(--neon);color:black;transform:scale(1.06)}
+.card-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:10}
+.card{width:90%;max-width:360px;background:#0c0018;border-radius:25px;border:2px solid var(--neon);box-shadow:0 0 40px var(--neon);animation:pop .4s ease}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.card img{width:100%;border-radius:22px 22px 0 0}
+.card-content{padding:20px}
+.close{margin-top:15px;padding:10px;border-radius:30px;border:1px solid var(--neon);cursor:pointer}
+@media(max-width:600px){h1{font-size:2.4rem}}
+</style>
+
+</head>
+<body>
+
+<div class="bg" id="bg"></div>
+<div class="overlay"></div>
+
+<div class="container">
+<h1 id="title">ADMELONAM</h1>
+<p class="subtitle">Official Artist Links</p>
+
+<div class="links">
+<div class="btn" onclick="openCard('Spotify','https://i.scdn.co/image/ab67616d0000b273a8b38d6e6d2c2d2a42b4c8a3','https://open.spotify.com/artist/3yBJFvPmtLSbE8Grix5HT0')"><i class="fab fa-spotify"></i> Spotify</div>
+<div class="btn" onclick="openCard('Apple Music','https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/5c/6b/44/5c6b44e0-0b7b-b0a4-2d4c-6bfaeac9a89a/cover.jpg/600x600bb.jpg','https://music.apple.com/ru/artist/melonam/1743696846')"><i class="fab fa-apple"></i> Apple Music</div>
+<div class="btn" onclick="openCard('Yandex Music','https://avatars.yandex.net/get-music-content/113160/3a94cfdc.a.22044865-1/600x600','https://music.yandex.ru/artist/22044865')"><i class="fas fa-music"></i> Yandex Music</div>
+<div class="btn" onclick="openCard('VK Music','https://sun9-77.userapi.com/impg/c855436/v855436037/1c8c5a/YZKX6ZK.jpg','https://vk.com/artist/4089981647278891478')"><i class="fab fa-vk"></i> VK</div>
+<div class="btn" onclick="openCard('YouTube','https://i.ytimg.com/vi_webp/VIDEO/maxresdefault.webp','https://youtube.com/@admelonam')"><i class="fab fa-youtube"></i> YouTube</div>
+<div class="btn" onclick="openCard('Instagram','https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png','https://www.instagram.com/mel0nam')"><i class="fab fa-instagram"></i> Instagram</div>
+<div class="btn" onclick="openCard('Telegram','https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg','https://t.me/admelonamoficial')"><i class="fab fa-telegram"></i> Telegram</div>
+<div class="btn" onclick="openCard('WhatsApp','https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg','https://wa.me/qr/T2BCI5QKBZJNO1')"><i class="fab fa-whatsapp"></i> WhatsApp</div>
+</div>
+</div>
+
+<div class="card-bg" id="cardBg" onclick="closeCard()">
+<div class="card" onclick="event.stopPropagation()">
+<img id="cardImg">
+<div class="card-content">
+<h2 id="cardTitle"></h2>
+<div class="btn" onclick="go()">Перейти</div>
+<div class="close" onclick="closeCard()">Закрыть</div>
+</div>
+</div>
+</div>
+
+<script>
+let link="";
+for(let i=0;i<80;i++){
+  let s=document.createElement("div");
+  s.className="star";
+  s.style.left=Math.random()*100+"%";
+  s.style.animationDelay=Math.random()*20+"s";
+  bg.appendChild(s);
+}
+document.addEventListener("mousemove",e=>{title.style.transform=`translate(${e.clientX/80}px,${e.clientY/80}px)`});
+function openCard(t,img,u){cardTitle.innerText=t;cardImg.src=img;link=u;cardBg.style.display="flex"}
+function closeCard(){cardBg.style.display="none"}
+function go(){window.open(link,"_blank")}
+</script>
+
+</body>
+</html>
